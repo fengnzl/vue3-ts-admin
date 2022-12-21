@@ -1,2 +1,2 @@
-class Http {}
+import { FRequest } from "./request";
 export {};
