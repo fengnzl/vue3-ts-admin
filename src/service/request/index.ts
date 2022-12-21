@@ -1,7 +1,6 @@
 import axios from "axios";
-import type { AxiosRequestConfig, AxiosInstance, AxiosResponse } from "axios";
+import type { AxiosInstance, AxiosResponse } from "axios";
 import type { FRequestConfig, FRequestInterceptors } from "./type";
-import { request } from "http";
 
 class FRequest {
   instance: AxiosInstance;
@@ -35,10 +34,48 @@ class FRequest {
     this.instance.interceptors.response.use(
       (res: AxiosResponse) => {
         // TODO 添加通用逻辑
-        return res;
+        return res.data;
       },
       (err) => err
     );
+  }
+
+  request<T = any>(config: FRequestConfig<T>): Promise<T> {
+    return new Promise((resolve, reject) => {
+      // 对单个请求 config 处理
+      if (config.interceports?.requestInterceptor) {
+        config = config.interceports.requestInterceptor(config);
+      }
+
+      this.instance
+        .request<any, T>(config)
+        .then((res) => {
+          // 对单个请求响应数据处理
+          if (config.interceports?.reposeInterceptor) {
+            res = config.interceports.reposeInterceptor(res);
+          }
+          // 将结果 resolve 返回出去
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+          return err;
+        });
+    });
+  }
+
+  get<T = any>(config: FRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: "GET" });
+  }
+
+  post<T = any>(config: FRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: "POST" });
+  }
+  delete<T = any>(config: FRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: "DELETE" });
+  }
+  patch<T = any>(config: FRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: "PATCH" });
   }
 }
 

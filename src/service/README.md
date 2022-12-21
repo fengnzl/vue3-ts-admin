@@ -75,5 +75,50 @@ class FRequest {
 export { FRequest };
 ```
 
+之后我们可以封装 `get`、`post` 等请求方法，如下所示：
+
+```ts
+class FRequest {
+ 	// ...
+  request<T = any>(config: FRequestConfig<T>): Promise<T> {
+    return new Promise((resolve, reject) => {
+      // 对单个请求 config 处理
+      if (config.interceports?.requestInterceptor) {
+        config = config.interceports.requestInterceptor(config);
+      }
+
+      this.instance
+        .request<any, T>(config)
+        .then((res) => {
+          // 对单个请求响应数据处理
+          if (config.interceports?.reposeInterceptor) {
+            res = config.interceports.reposeInterceptor(res);
+          }
+          // 将结果 resolve 返回出去
+          resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
+          return err;
+        });
+    });
+  }
+
+  get<T = any>(config: FRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: "GET" });
+  }
+
+  post<T = any>(config: FRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: "POST" });
+  }
+  delete<T = any>(config: FRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: "DELETE" });
+  }
+  patch<T = any>(config: FRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: "PATCH" });
+  }
+}
+```
+
 
 
