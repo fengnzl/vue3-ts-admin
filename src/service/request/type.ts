@@ -3,7 +3,7 @@ import type { AxiosRequestConfig, AxiosResponse } from "axios";
 export interface FRequestInterceptors<T = AxiosResponse> {
   requestInterceptor?: (config: AxiosRequestConfig) => AxiosRequestConfig;
   requestInterceptorCatch?: (err: any) => any;
-  reposeInterceptor?: (res: T) => T;
+  responseInterceptor?: (res: T) => T;
   responseInterceptorCatch?: (err: any) => any;
 }
 

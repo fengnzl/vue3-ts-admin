@@ -16,9 +16,9 @@ export const $http = new FRequest({
     requestInterceptorCatch(err) {
       return err;
     },
-    // responseInterceptor(res) {
-    //   return res;
-    // },
+    responseInterceptor(res) {
+      return res;
+    },
     responseInterceptorCatch(err) {
       return err;
     },

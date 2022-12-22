@@ -19,7 +19,7 @@ class FRequest {
       this.interceptors?.requestInterceptorCatch
     );
     this.instance.interceptors.response.use(
-      this.interceptors?.reposeInterceptor,
+      this.interceptors?.responseInterceptor,
       this.interceptors?.responseInterceptorCatch
     );
 
@@ -51,8 +51,8 @@ class FRequest {
         .request<any, T>(config)
         .then((res) => {
           // 对单个请求响应数据处理
-          if (config.interceports?.reposeInterceptor) {
-            res = config.interceports.reposeInterceptor(res);
+          if (config.interceports?.responseInterceptor) {
+            res = config.interceports.responseInterceptor(res);
           }
           // 将结果 resolve 返回出去
           resolve(res);
