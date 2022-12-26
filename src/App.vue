@@ -2,13 +2,14 @@
 </script>
 
 <template>
-  <div>
-    <router-link to="/">登陆</router-link>
-    <router-link to="/main">首页</router-link>
+  <div class="app">
     <router-view></router-view>
   </div>
 
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+.app {
+  height: 100%;
+}
 </style>
